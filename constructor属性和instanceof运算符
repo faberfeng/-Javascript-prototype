@@ -1,0 +1,60 @@
+5.constructor属性
+
+prototype对象有一个constructor属性，默认指向prototype对象所在的构造函数。
+
+要注意的是，prototype是构造函数的属性，而constructor则是构造函数的prototype属性所指向的那个对象，也就是原型对象的属性。注意不要混淆。
+
+由于constructor属性是定义在原型（prototype）对象上面，意味着可以被所有实例对象继承。
+function A(){};
+var a=new A();
+console.log(a.constructor); //A()
+console.log(a.constructor===A.prototype.constructor);//true
+上面代码中，a是构造函数A的实例对象，但是a自身没有contructor属性，该属性其实是读取原型链上面的
+
+A.prototype.constructor属性。
+
+    5.1：constructor属性的作用
+
+　　　a：分辨原型对象到底属于哪个构造函数
+        function A(){};
+        var a=new A();
+        console.log(a.constructor===A) //true
+        console.log(a.constructor===Array) //false
+        上面代码表示，使用constructor属性，确定实例对象a的构造函数是A，而不是Array。
+
+      b：从实例新建另一个实例
+        function A() {};
+        var a = new A();
+        var b = new a.constructor();
+        console.log(b instanceof A); //true
+        上面代码中，a是构造函数A的实例对象，可以从a.constructor间接调用构造函数。
+
+      c：调用自身的构造函数成为可能
+          A.prototype.hello = function() {
+          return new this.constructor();
+          }
+　　　　d：提供了一种从构造函数继承另外一种构造函数的模式
+        function Father() {}
+           function Son() {
+          Son.height.constructor.call(this);
+         }
+         Son.height = new Father();
+  上面代码中，Father和Son都是构造函数，在Son内部的this上调用Father，就会形成Son继承Father的效果。
+
+  e：由于constructor属性是一种原型对象和构造函数的关系，所以在修改原型对象的时候，一定要注意constructor的指向问题。
+
+     解决方法有两种，要么将constructor属性指向原来的构造函数，要么只在原型对象上添加属性和方法，避免instanceof失真。
+
+6.instanceof运算符
+
+  instanceof运算符返回一个布尔值，表示指定对象是否为某个构造函数的实例。
+
+  因为instanceof对整个原型链上的对象都有效，所以同一个实例对象，可能会对多个构造函数都返回true。
+
+  注意，instanceof对象只能用于复杂数据类型（数组，对象等），不能用于简单数据类型（布尔值，数字，字符串等）。
+
+  此外，null和undefined都不是对象，所以instanceof 总是返回false。
+
+  利用instanceof运算符，还可以巧妙地解决，调用构造函数时，忘了加new命令的问题。
+
+  上面代码中，使用了instanceof运算符来判断函数体内的this关键字是否指向构造函数Keith的实例，如果不是，就表明忘记加new命令，此时构造函数会返回一个对象实例，避免出现意想不到的结果。
