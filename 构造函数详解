@@ -1,0 +1,39 @@
+1.构造函数的简单介绍
+
+　　在我的一篇Javascript 中构造函数与new命令的密切关系文章中，详细了介绍了构造函数的概念和特点，new命令的原理和用法等，如果对于构造函数不熟悉的同学，可以前往细细品味。以下做一个简单的回顾。
+
+　　所谓构造函数，就是提供了一个生成对象的模板并描述对象的基本结构的函数。一个构造函数，可以生成多个对象，每个对象都有相同的结构。总的来说，构造函数就是对象的模板，对象就是构造函数的实例。
+
+　　构造函数的特点有：
+
+　　　　a：构造函数的函数名首字母必须大写。
+
+　　　　b：内部使用this对象，来指向将要生成的对象实例。
+
+　　　　c：使用new操作符来调用构造函数，并返回对象实例。
+
+　　看一个最简单的一个例子。
+
+function Person(){
+ this.name = 'keith';
+}
+ var boy = new Person();
+console.log(boy.name); //'keith'
+2.构造函数的缺点
+
+　　所有的实例对象都可以继承构造函数中的属性和方法。但是，同一个对象实例之间，无法共享属性。
+
+function Person(name,height){
+ this.name=name;
+ this.height=height;
+ this.hobby=function(){
+ return 'watching movies';
+}
+ }
+var boy=new Person('keith',180);
+ var girl=new Person('rascal',153);
+ console.log(boy.name); //'keith'
+ console.log(girl.name); //'rascal'
+ console.log(boy.hobby===girl.hobby); //false
+上面代码中，一个构造函数Person生成了两个对象实例boy和girl，并且有两个属性和一个方法。但是，它们的hobby方法是不一样的。也就是说，每当你使用new来调用构造函数放回一个对象实例的时候，都会创建一个hobby方法。这既没有必要，又浪费资源，因为所有hobby方法都是童颜的行为，完全可以被两个对象实例共享。
+所以，构造函数的缺点就是：同一个构造函数的对象实例之间无法共享属性或方法。
